@@ -16,5 +16,4 @@ COPY . .
 
 EXPOSE 3000
 # Start the app
-ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
 CMD ["/usr/local/bin/npm", "start"]
