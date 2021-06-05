@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 3000
 # Start the app
-CMD ["/usr/local/bin/npm", "start"]
+ENTRYPOINT ["/usr/local/bin/npm", "start"]
