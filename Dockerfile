@@ -1,6 +1,5 @@
 FROM node:14-alpine
 
-RUN addgroup mygroup && adduser -D -G mygroup myuser && mkdir -p /usr/src/app && chown -R myuser /usr/src/app
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -8,15 +7,12 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN chown myuser /usr/src/app/package-lock.json
-
-USER myuser
-
 RUN npm install
 
-RUN chmod -R 777 /usr/src/app/
 # Bundle app source
 COPY . .
+
+RUN chmod -R 777 /usr/src/app/
 
 EXPOSE 3000
 # Start the app
