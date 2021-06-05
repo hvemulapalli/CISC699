@@ -12,8 +12,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN chmod -R 777 /usr/src/app/
+#RUN chmod -R 777 /usr/src/app/
 
 EXPOSE 3000
 # Start the app
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
 CMD ["/usr/local/bin/npm", "start"]
