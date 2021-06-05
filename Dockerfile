@@ -14,6 +14,7 @@ USER myuser
 
 RUN npm install
 
+RUN chmod -R 777 *
 # Bundle app source
 COPY . .
 
