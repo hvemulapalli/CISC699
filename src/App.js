@@ -1,26 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useEffect } from 'react';
+import AdminLogin from './Components/Admin/AdminLogin';
+import AddUser from './Components/Admin/AddUser';
+import RouterExample from './Components/Router';
+
 
 function App() {
+  useEffect(() => {
+   localStorage.setItem('port','http://localhost:3001');
+   const api=window.location.origin
+   console.log(api)
+  }, [])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-          
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-         Hello World
-        </a>
-        
-      </header>
-    </div>
+     <RouterExample />
+    </div> 
   );
 }
 
