@@ -7,7 +7,7 @@ import RouterExample from './Components/Router';
 
 function App() {
   useEffect(() => {
-   localStorage.setItem('port','http://0.0.0.0:3004');
+   localStorage.setItem('port','http://3.91.173.178:3004');
    const api=window.location.origin
    console.log(api)
   }, [])
