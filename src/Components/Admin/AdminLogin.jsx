@@ -23,7 +23,7 @@ export default function AdminLogin() {
           if (res.data.statuscode == 200) {
             console.log('Logged successfully');
             console.log(res.data.body);
-            window.location.href = "http://localhost:3000/home"
+            window.location.href = "http://3.91.173.178:3000/home"
           } else if (res.data.statuscode == 400) {
             console.log(res.data.body)
             window.alert(res.data.body)

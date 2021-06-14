@@ -61,7 +61,7 @@ import Navmenu from '../NavMenu/Navmenu';
                                             <div className="d-none d-xl-inline-block">Admin</div>
                                         </a>
                                         <div className="dropdown-menu dropdown-menu-end logout" aria-labelledby="userDropdown">
-                                            <a className="dropdown-item" href="http://localhost:3000" data-toggle="modal" data-target="#logoutModal"><i className="fas fa-sign-out-alt"></i>
+                                            <a className="dropdown-item" href="http://3.91.173.178:3000" data-toggle="modal" data-target="#logoutModal"><i className="fas fa-sign-out-alt"></i>
                                                 Logout</a>
                                         </div>
                                     </li>
