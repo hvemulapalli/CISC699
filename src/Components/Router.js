@@ -2,43 +2,56 @@ import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import AdminLogin from './Admin/AdminLogin';
-import AddUser from './Admin/AddUser';
-
-
-
+import SprintList from './Admin/SprintList';
+import StoryList from './Admin/StoryList';
+import BugsList from './Admin/BugsList';
+import UsersList from './Admin/UsersList';
+import Dashboard from './Admin/Dashboard';
+import Dummy from './Admin/Dummy';
 export default function RouterExample() {
   return (
     <Router>
       <div>
-      
-
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-        <Switch>
+       <Switch>
         <Route exact path="/">
             <AdminLogin />
           </Route>
-          <Route exact path="/home">
-            <AddUser />
+          {/* Routing for admin */}
+          <Route exact path="/admin/sprints">
+            <SprintList/>
           </Route>
-         
+          <Route exact path="/admin/users">
+            <UsersList />
+          </Route>
+          <Route exact path="/admin/stories">
+            <StoryList />
+          </Route>
+          <Route exact path="/admin/bugs">
+            <BugsList />
+          </Route>
+         {/* Routing for User */}
+         <Route exact path="/users/home">
+         <Dummy/>
+          </Route>
+          <Route exact path="/users/sprints">
+          <Dashboard/>
+          </Route>
+          <Route exact path="/users/stories">
+            <Dummy/>
+          </Route>
+          <Route exact path="/users/bugs">
+            <Dummy />
+          </Route>
         </Switch>
       </div>
     </Router>
   );
 }
 
-// You can think of these components as "pages"
-// in your app.
+
 
 
 

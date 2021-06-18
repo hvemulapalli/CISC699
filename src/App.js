@@ -1,15 +1,13 @@
 import './App.css';
 import React, {useEffect } from 'react';
-import AdminLogin from './Components/Admin/AdminLogin';
-import AddUser from './Components/Admin/AddUser';
 import RouterExample from './Components/Router';
-
 
 function App() {
   useEffect(() => {
    localStorage.setItem('port','http://3.91.173.178:3004');
    const api=window.location.origin
-   console.log(api)
+   console.log(api);
+   localStorage.setItem('hosted_port',api);
   }, [])
   return (
     <div className="App">
