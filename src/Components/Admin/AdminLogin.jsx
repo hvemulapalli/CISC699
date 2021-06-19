@@ -56,7 +56,6 @@ export default function AdminLogin() {
             }else{
               return false;
             }
-            window.location.href = host+"/users/home"
           } else if (res.data.statuscode === 400) {
             console.log(res.data.body);
             window.alert(res.data.body);
