@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import Navmenu from "../NavMenu/Navmenu";
+
 import axios from "axios";
-class StoryList extends Component {
+import UserMenu from "../NavMenu/UserMenu";
+export default class TesterStories extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -158,7 +159,7 @@ class StoryList extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <Navmenu />
+              <UserMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -190,7 +191,7 @@ class StoryList extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Admin</div>
+                        <div className="d-none d-xl-inline-block">Tester</div>
                       </a>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -299,4 +300,4 @@ class StoryList extends Component {
   }
 }
 
-export default StoryList;
+ 

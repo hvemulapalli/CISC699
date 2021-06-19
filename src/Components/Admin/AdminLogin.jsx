@@ -24,7 +24,7 @@ export default function AdminLogin() {
             console.log('Logged successfully');
             console.log(res.data.body);
             localStorage.setItem('id',res.data.body[0].admin_id);
-            const host=localStorage.getItem('hosted_port');
+           const host=localStorage.getItem('hosted_port');
             window.location.href = host+"/admin/sprints"
           } else if (res.data.statuscode === 400) {
             console.log(res.data.body);
@@ -46,7 +46,16 @@ export default function AdminLogin() {
             console.log('Logged successfully');
             console.log(res.data.body);
             localStorage.setItem('id',res.data.body[0].user_id);
-            const host=localStorage.getItem('hosted_port');
+           const host=localStorage.getItem('hosted_port');
+            if(res.data.body[0].role_type==="tester"){
+              window.location.href = host+"/tester/sprints"
+            }else if(res.data.body[0].role_type==="developer"){
+              window.location.href = host+"/devs/sprints"
+            }else if(res.data.body[0].role_type==="manager"){
+              window.location.href = host+"/manager/sprints"
+            }else{
+              return false;
+            }
             window.location.href = host+"/users/home"
           } else if (res.data.statuscode === 400) {
             console.log(res.data.body);

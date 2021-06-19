@@ -13,16 +13,16 @@ class UserMenu extends Component {
       <nav className="navbar navbar-expand-lg navbar-light admin-menu">
           <ul className="admin-details list-unstyled">
               <li className="nav-item nav__menu-item">
-                  <NavLink to="/users/sprints" className="nav-link text-reset text-decoration-none"><i className="fas fa-tachometer-alt pe-2"></i><span>Sprints</span>
+                  <NavLink to="/tester/sprints" className="nav-link text-reset text-decoration-none"><i className="fas fa-tachometer-alt pe-2"></i><span>Sprints</span>
                   </NavLink>
               </li>
               
               <li className="nav-item nav__menu-item">
-                  <NavLink to="/users/stories" className="nav-link text-reset text-decoration-none"><i className="fas fa-columns pe-2"></i><span>Stories</span>
+                  <NavLink to="/tester/stories" className="nav-link text-reset text-decoration-none"><i className="fas fa-columns pe-2"></i><span>Stories</span>
                   </NavLink>
               </li>
               <li className="nav-item nav__menu-item">
-                  <NavLink to="/users/bugs" className="nav-link text-reset text-decoration-none"><i className="fas fa-columns pe-2"></i><span>Bugs</span>
+                  <NavLink to="/tester/bugs" className="nav-link text-reset text-decoration-none"><i className="fas fa-columns pe-2"></i><span>Bugs</span>
                   </NavLink>
               </li>
             </ul>
