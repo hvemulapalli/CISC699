@@ -9,8 +9,9 @@ import SprintList from './Admin/SprintList';
 import StoryList from './Admin/StoryList';
 import BugsList from './Admin/BugsList';
 import UsersList from './Admin/UsersList';
-import Dashboard from './Admin/Dashboard';
-import Dummy from './Admin/Dummy';
+import TesterStories from "./Tester/TesterStories";
+import TesterSprints from "./Tester/TesterSprints";
+import TesterBugs from "./Tester/TesterBugs";
 export default function RouterExample() {
   return (
     <Router>
@@ -32,18 +33,15 @@ export default function RouterExample() {
           <Route exact path="/admin/bugs">
             <BugsList />
           </Route>
-         {/* Routing for User */}
-         <Route exact path="/users/home">
-         <Dummy/>
+         {/* Routing for tester */}
+        <Route exact path="/tester/sprints">
+        <TesterSprints/>
           </Route>
-          <Route exact path="/users/sprints">
-          <Dashboard/>
+          <Route exact path="/tester/stories">
+          <TesterStories />
           </Route>
-          <Route exact path="/users/stories">
-            <Dummy/>
-          </Route>
-          <Route exact path="/users/bugs">
-            <Dummy />
+          <Route exact path="/tester/bugs">
+          <TesterBugs />
           </Route>
         </Switch>
       </div>

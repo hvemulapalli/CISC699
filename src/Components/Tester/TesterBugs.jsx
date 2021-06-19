@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import Navmenu from "../NavMenu/Navmenu";
-import axios from "axios";
-class StoryList extends Component {
+import axios from 'axios';
+import UserMenu from "../NavMenu/UserMenu";
+export default class TesterBugs extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -27,75 +27,52 @@ class StoryList extends Component {
           sprint_admin: 1,
         },
       ],
-      stories: [
+      bugs: [
         {
-          story_id: 1,
+          bug_id: 3,
 
-          story_name: "one",
+          bug_name: "one",
 
-          story_description: "sdfsdf",
+          bug_description: "sdfsdf",
 
-          story_priority: "high",
+          bug_priority: "high",
 
-          story_points: 1,
+          bug_points: 1,
 
-          story_status: "active",
+          bug_status: "active",
 
-          story_created_by: 1,
+          bug_created_by: 1,
 
-          story_assignee: 2,
+          bug_assignee: 2,
 
-          story_completed_hours: 1,
+          bug_completed_hours: 1,
 
-          story_estimated_hours: 2,
+          bug_estimated_hours: 2,
 
-          story_sprint: 1,
+          bug_sprint: 1,
         },
         {
-          story_id: 2,
+          bug_id: 3,
 
-          story_name: "two",
+          bug_name: "one",
 
-          story_description: "sdfsdf",
+          bug_description: "sdfsdf",
 
-          story_priority: "high",
+          bug_priority: "high",
 
-          story_points: 1,
+          bug_points: 1,
 
-          story_status: "active",
+          bug_status: "active",
 
-          story_created_by: 1,
+          bug_created_by: 1,
 
-          story_assignee: 2,
+          bug_assignee: 2,
 
-          story_completed_hours: 1,
+          bug_completed_hours: 1,
 
-          story_estimated_hours: 2,
+          bug_estimated_hours: 2,
 
-          story_sprint: 2,
-        },
-        {
-          story_id: 2,
-
-          story_name: "two",
-
-          story_description: "sdfsdf",
-
-          story_priority: "high",
-
-          story_points: 1,
-
-          story_status: "active",
-
-          story_created_by: 1,
-
-          story_assignee: 2,
-
-          story_completed_hours: 1,
-
-          story_estimated_hours: 2,
-
-          story_sprint: 2,
+          bug_sprint: 1,
         },
       ],
     };
@@ -128,37 +105,36 @@ class StoryList extends Component {
     ].flat();
     this.setState({ activeClasses });
   }
-  getListOfStories() {
-    const port = localStorage.getItem("port");
-    axios
-      .get(port + "/getlistofstories")
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.statuscode === 200) {
-          console.log(res.data.body);
-          this.setState({ stories: res.data.body });
-        } else if (res.data.statuscode === 400) {
-          console.log(res.data.body);
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  componentDidMount() {
-    this.getSprints();
-    this.getListOfStories();
-  }
-
+  getListOfBugs(){
+    const port=localStorage.getItem('port');
+    axios.get(port + "/listbugs")
+    .then((res) => {
+     console.log(res.data);
+     if (res.data.statuscode === 200) {
+      console.log(res.data.body);
+      this.setState({bugs:res.data.body})
+     } else if (res.data.statuscode === 400) {
+       console.log(res.data.body);
+      
+     } else {
+       return false;
+     }
+   })
+   .catch((error) => {
+     console.log(error);
+   });
+}
+componentDidMount(){
+  this.getSprints();
+    this.getListOfBugs();
+}
   render() {
     return (
       <>
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <Navmenu />
+              <UserMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -190,7 +166,7 @@ class StoryList extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Admin</div>
+                        <div className="d-none d-xl-inline-block">Tester</div>
                       </a>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -214,9 +190,8 @@ class StoryList extends Component {
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
                 <div className="card-header bg-white">
-                  <h5 className="mb-0 text-primary fw-bold">Story List</h5>
+                  <h5 className="mb-0 text-primary fw-bold">Bugs List</h5>
                 </div>
-
                 <div className="card-body">
                   {this.state.sprints.length !== 0 && (
                     <React.Fragment>
@@ -225,56 +200,56 @@ class StoryList extends Component {
                           <h5 className="mb-0 text-primary fw-bold">
                             {r.sprint_name}
                           </h5>
-                          {this.state.stories.length=== 0 &&<div>No storiess found</div>}
-                          {this.state.stories.length !== 0 && (
+                          {this.state.bugs.length=== 0 &&<div>No bugs found</div>}
+                          {this.state.bugs.length !== 0 && (
                             <React.Fragment>
-                              {this.state.stories
-                                .filter((e) => e.story_sprint === r.sprint_id)
+                              {this.state.bugs
+                                .filter((e) => e.bug_sprint === r.sprint_id)
                                 .map((p, i) => (
                                   <div className="row">
                                     <div className="offset-md-2 col-md-6">
                                       <div className="card card-body shadow-sm">
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Name :</p>
-                                        <p>{p.story_name}</p>
+                                          <p className="fw-bold" >Bug Name :</p>
+                                        <p>{p.bug_name}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Description :</p>
+                                          <p className="fw-bold" >Bug Description :</p>
                                           
-                                          <p>{p.story_description}</p>
+                                          <p>{p.bug_description}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Priority :</p>
+                                          <p className="fw-bold" >Bug Priority :</p>
                                           
-                                          <p>{p.story_priority}</p>
+                                          <p>{p.bug_priority}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Points :</p>
+                                          <p className="fw-bold" >Bug Points :</p>
                                           
-                                          <p>{p.story_points}</p>
+                                          <p>{p.bug_points}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Status :</p>
+                                          <p className="fw-bold" >Bug Status :</p>
                                           
-                                          <p>{p.story_status}</p>
+                                          <p>{p.bug_status}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Created By :</p>
+                                          <p className="fw-bold" >Bug Created By :</p>
                                           
-                                          <p>{p.story_created_by}</p>
+                                          <p>{p.bug_created_by}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Asignee :</p>
-                                        <p>{p.story_assignee}</p>
+                                          <p className="fw-bold" >Bug Asignee :</p>
+                                        <p>{p.bug_assignee}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" > Story Completed Hours :</p>
-                                          <p>{p.story_completed_hours}</p>
+                                          <p className="fw-bold" > Bug Completed Hours :</p>
+                                          <p>{p.bug_completed_hours}</p>
                                         </div>
                                         <div className="d-flex d-flex justify-content-around">
-                                          <p className="fw-bold" >Story Estimated Hours :</p>
+                                          <p className="fw-bold" >Bug Estimated Hours :</p>
                                           
-                                          <p >{p.story_estimated_hours}</p>
+                                          <p >{p.bug_estimated_hours}</p>
                                         </div>
                                         
                                       </div>
@@ -289,8 +264,7 @@ class StoryList extends Component {
                     </React.Fragment>
                   )}
                 </div>
-
-              </div>
+ </div>
             </div>
           </div>
         </div>
@@ -299,4 +273,4 @@ class StoryList extends Component {
   }
 }
 
-export default StoryList;
+
