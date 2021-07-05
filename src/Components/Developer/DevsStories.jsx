@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import Navmenu from "../NavMenu/Navmenu";
+import DevsMenu from "../NavMenu/DevsMenu";
 import axios from "axios";
-class StoryList extends Component {
+class DevsStories extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -165,7 +165,19 @@ class StoryList extends Component {
         console.log(res.data);
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
-          this.setState({ users: res.data.body });
+          console.log("users list");
+          var loginid = localStorage.getItem('id');
+          var u_data= res.data.body;
+          var u_list = [];
+          u_data.map(ll=>{
+            if(ll.user_id!==parseInt(loginid)){
+              u_list.push(ll);
+            }
+          });
+          
+          console.log(u_list);
+          console.log("users list");
+          this.setState({ users: u_list });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -206,13 +218,17 @@ class StoryList extends Component {
   }
   getListOfStories() {
     const port = localStorage.getItem("port");
+    const data = { user_id: localStorage.getItem("id") };
+    const headers = {
+      "Content-Type": "application/json",
+    };
     axios
-      .get(port + "/getlistofstories")
+      .post(port + "/listuserstories", data, headers)
       .then((res) => {
         console.log(res.data);
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
-          this.setState({ stories: res.data.body });
+            this.setState({ stories: res.data.body });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -282,7 +298,7 @@ class StoryList extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <Navmenu />
+              <DevsMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -313,7 +329,7 @@ class StoryList extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Admin</div>
+                        <div className="d-none d-xl-inline-block">Developer</div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -375,7 +391,7 @@ class StoryList extends Component {
                                 <th scope="col">Edit</th>
                               </tr>
                             </thead>
-
+                            
                             {this.state.stories.length === 0 && (
                               <div>No stories found</div>
                             )}
@@ -617,4 +633,4 @@ class StoryList extends Component {
   }
 }
 
-export default StoryList;
+export default DevsStories;

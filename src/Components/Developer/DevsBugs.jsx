@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import Navmenu from "../NavMenu/Navmenu";
 import axios from "axios";
-class BugsList extends Component {
+import DevsMenu from "../NavMenu/DevsMenu";
+export default class DevsBugs extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -134,7 +134,19 @@ class BugsList extends Component {
         console.log(res.data);
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
-          this.setState({ users: res.data.body });
+          console.log("users list");
+          var loginid = localStorage.getItem('id');
+          var u_data= res.data.body;
+          var u_list = [];
+          u_data.map(ll=>{
+            if(ll.user_id!==parseInt(loginid)){
+              u_list.push(ll);
+            }
+          });
+          
+          console.log(u_list);
+          console.log("users list");
+          this.setState({ users: u_list });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -171,6 +183,7 @@ class BugsList extends Component {
           console.log(data);
           console.log(res.data.body);
           window.alert(res.data.body);
+          this.getListOfBugs();
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
           window.alert(res.data.body);
@@ -224,8 +237,12 @@ class BugsList extends Component {
   }
   getListOfBugs() {
     const port = localStorage.getItem("port");
+    const data = { user_id: localStorage.getItem("id") };
+    const headers = {
+      "Content-Type": "application/json",
+    };
     axios
-      .get(port + "/listbugs")
+      .post(port + "/listuserbugs", data, headers)
       .then((res) => {
         console.log(res.data);
         if (res.data.statuscode === 200) {
@@ -252,7 +269,7 @@ class BugsList extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <Navmenu />
+              <DevsMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -283,7 +300,7 @@ class BugsList extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Admin</div>
+                        <div className="d-none d-xl-inline-block">Developer </div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -434,6 +451,7 @@ class BugsList extends Component {
                         aria-label="Close"
                       ></button>
                     </div>
+                    
                     <div className="modal-body">
                       <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -516,6 +534,7 @@ class BugsList extends Component {
                               {this.state.users.length !== 0 && (
                                 <React.Fragment>
                                   {this.state.users.map((p, index) => (
+                                    
                                     <React.Fragment>
                                       <option key={index} value={p.user_id}>
                                         {p.user_name}
@@ -597,4 +616,4 @@ class BugsList extends Component {
   }
 }
 
-export default BugsList;
+
