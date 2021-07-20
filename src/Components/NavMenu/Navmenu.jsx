@@ -8,7 +8,7 @@ class Navmenu extends Component {
         return (
           <div>
           <div className="img-div text-center shadow-sm">
-          <h2>Ticketing</h2>
+          <h4>Admin Panel</h4>
       </div>
       <nav className="navbar navbar-expand-lg navbar-light admin-menu">
           <ul className="admin-details list-unstyled">

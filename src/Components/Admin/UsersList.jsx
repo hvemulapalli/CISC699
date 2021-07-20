@@ -10,7 +10,7 @@ class UsersList extends Component {
     super(props);
     this.state = {
       active: false,
-      user_id:"",
+      user_id: "",
       emp_id: "",
       user_name: "",
       user_email: "",
@@ -48,6 +48,7 @@ class UsersList extends Component {
     const { name } = event.target;
     this.setState({ ...this.state, [name]: event.target.value });
   }
+ 
   addActiveClass(index) {
     const activeClasses = [
       ...this.state.activeClasses.slice(0, index),
@@ -108,18 +109,19 @@ class UsersList extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        emp_id: "",
-        user_name:"",
-        user_email:"",
-        user_password:"",
-        user_phone_number: "",
-        role_type: ""})
+    this.setState({
+      emp_id: "",
+      user_name: "",
+      user_email: "",
+      user_password: "",
+      user_phone_number: "",
+      role_type: "",
+    });
   }
   editUser() {
     const port = localStorage.getItem("port");
     const data = {
-      user_id:this.state.user_id,
+      user_id: this.state.user_id,
       emp_id: this.state.emp_id,
       user_name: this.state.user_name,
       user_email: this.state.user_email,
@@ -130,7 +132,7 @@ class UsersList extends Component {
     const headers = {
       "Content-Type": "application/json",
     };
-    console.log(data)
+    console.log(data);
     axios
       .put(port + "/userupdate", data, headers)
       .then((res) => {
@@ -150,15 +152,29 @@ class UsersList extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        emp_id: "",
-        user_name: "",
-        user_email: "",
-        user_password: "",
-        user_phone_number: "",
-        role_type: "",
-      });
+    this.setState({
+      emp_id: "",
+      user_name: "",
+      user_email: "",
+      user_password: "",
+      user_phone_number: "",
+      role_type: "",
+    });
   }
+  
+  validateMail = () => {
+    if (!this.state.user_email) {
+      window.alert("email required");
+    } else if (
+      !this.state.user_email.match(
+        /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
+      )
+    ) {
+      window.alert("invalid email");
+    }else {
+      return true;
+    }
+  };
   componentDidMount() {
     this.getListofUsers();
   }
@@ -324,6 +340,7 @@ class UsersList extends Component {
                         name="emp_id"
                         value={this.state.emp_id}
                         onChange={this.handleChange}
+                      
                       />
                     </div>
                   </div>
@@ -337,6 +354,7 @@ class UsersList extends Component {
                         name="user_name"
                         value={this.state.user_name}
                         onChange={this.handleChange}
+                        
                       />
                     </div>
                   </div>
@@ -350,6 +368,7 @@ class UsersList extends Component {
                         name="user_email"
                         value={this.state.user_email}
                         onChange={this.handleChange}
+                        onBlur={this.validateMail}
                       />
                     </div>
                   </div>
@@ -363,6 +382,7 @@ class UsersList extends Component {
                         name="user_password"
                         value={this.state.user_password}
                         onChange={this.handleChange}
+                        
                       />
                     </div>
                   </div>
@@ -376,6 +396,7 @@ class UsersList extends Component {
                         name="user_phone_number"
                         value={this.state.user_phone_number}
                         onChange={this.handleChange}
+                        
                       />
                     </div>
                   </div>
@@ -388,6 +409,7 @@ class UsersList extends Component {
                         name="role_type"
                         value={this.state.role_type}
                         onChange={this.handleChange}
+                       
                       >
                         <option selected>Select</option>
                         <option value="developer">Developer</option>

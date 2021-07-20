@@ -390,12 +390,8 @@ class StoryList extends Component {
                                       <td>{p.story_priority}</td>
                                       <td>{p.story_points}</td>
                                       <td>{p.story_status}</td>
-                                      <td>
-                                       {p.story_created_by.name}
-                                      </td>
-                                      <td>
-                                       {p.story_assignee.name}
-                                      </td>
+                                      <td>{p.story_created_by.name}</td>
+                                      <td>{p.story_assignee.name}</td>
                                       <td>{p.story_estimated_hours}</td>
                                       <td>{p.story_completed_hours}</td>
                                       <td>
@@ -417,10 +413,11 @@ class StoryList extends Component {
                                               story_priority: p.story_priority,
                                               story_points: p.story_points,
                                               story_status: p.story_status,
-                                              story_created_by: p.story_created_by.id,
-                                              story_assignee: p.story_assignee.id,
-                                              story_completed_hours:
-                                                p.story_completed_hours,
+                                              story_created_by:
+                                                p.story_created_by.id,
+                                              story_assignee:
+                                                p.story_assignee.id,
+                                              story_completed_hours: 0,
                                               story_estimated_hours:
                                                 p.story_estimated_hours,
                                             });
@@ -503,6 +500,7 @@ class StoryList extends Component {
                             value={this.state.story_points}
                             onChange={this.handleChange}
                           >
+                            <option value={this.state.story_points} selected>{this.state.story_points}</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -519,6 +517,7 @@ class StoryList extends Component {
                             value={this.state.story_status}
                             onChange={this.handleChange}
                           >
+                            <option  value={this.state.story_status} selected> {this.state.story_status}</option>
                             <option value="done">Done</option>
                             <option value="to be verified">
                               To be verified
@@ -566,18 +565,18 @@ class StoryList extends Component {
                         </div>
                       </div>
                       <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-       <div className="mb-3">
-         <label className="form-label">Completed Hours</label>
-         <input
-           type="text"
-           className="form-control"
-           id="exampleFormControlInput3"
-           name="story_completed_hours"
-           value={this.state.story_completed_hours}
-           onChange={this.handleChange}
-         />
-       </div>
-     </div>
+                        <div className="mb-3">
+                          <label className="form-label">Completed Hours</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="exampleFormControlInput3"
+                            name="story_completed_hours"
+                            value={this.state.story_completed_hours}
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                      </div>
                       <div className="col-12">
                         <div className="mb-3">
                           <label className="form-label">

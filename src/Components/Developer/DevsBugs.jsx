@@ -135,18 +135,18 @@ export default class DevsBugs extends Component {
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
           console.log("users list");
-          var loginid = localStorage.getItem('id');
-          var u_data= res.data.body;
-          var u_list = [];
-          u_data.map(ll=>{
-            if(ll.user_id!==parseInt(loginid)){
-              u_list.push(ll);
+          var loginid = localStorage.getItem("id");
+          var data = res.data.body;
+          let filterList = data.filter((ll) => {
+            if (ll.user_id !== parseInt(loginid)) {
+                return true;
+
             }
-          });
-          
-          console.log(u_list);
+            return false;
+        })
+        console.log(filterList);
           console.log("users list");
-          this.setState({ users: u_list });
+          this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -300,7 +300,9 @@ export default class DevsBugs extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Developer </div>
+                        <div className="d-none d-xl-inline-block">
+                          Developer{" "}
+                        </div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -404,8 +406,7 @@ export default class DevsBugs extends Component {
                                                   bug_status: p.bug_status,
                                                   bug_assignee:
                                                     p.bug_assignee.id,
-                                                  bug_completed_hours:
-                                                    p.bug_completed_hours,
+                                                  bug_completed_hours: 0,
                                                   bug_estimated_hours:
                                                     p.bug_estimated_hours,
                                                 });
@@ -451,7 +452,7 @@ export default class DevsBugs extends Component {
                         aria-label="Close"
                       ></button>
                     </div>
-                    
+
                     <div className="modal-body">
                       <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -494,6 +495,7 @@ export default class DevsBugs extends Component {
                               value={this.state.bug_points}
                               onChange={this.handleChange}
                             >
+                               <option value={this.state.bug_points} selected hidden>{this.state.bug_points}</option>
                               <option value="1">1</option>
                               <option value="2">2</option>
                               <option value="3">3</option>
@@ -510,6 +512,7 @@ export default class DevsBugs extends Component {
                               value={this.state.bug_status}
                               onChange={this.handleChange}
                             >
+                              <option  value={this.state.bugs_status} hidden selected> {this.state.bugs_status}</option>
                               <option value="done">Done</option>
                               <option value="to be verified">
                                 To be verified
@@ -534,7 +537,6 @@ export default class DevsBugs extends Component {
                               {this.state.users.length !== 0 && (
                                 <React.Fragment>
                                   {this.state.users.map((p, index) => (
-                                    
                                     <React.Fragment>
                                       <option key={index} value={p.user_id}>
                                         {p.user_name}
@@ -615,5 +617,3 @@ export default class DevsBugs extends Component {
     );
   }
 }
-
-

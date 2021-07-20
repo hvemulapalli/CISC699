@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import Navmenu from "../NavMenu/Navmenu";
+import ManagerMenu from "../NavMenu/ManagerMenu";
 import axios from "axios";
-class BugsList extends Component {
+export default class ManagerBugs extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -118,9 +118,12 @@ class BugsList extends Component {
       bug_assignee: "",
       bug_completed_hours: "0",
       bug_estimated_hours: "",
+      move_sprint_id:"",
+      move_bug_id:""
     };
     this.handleChange = this.handleChange.bind(this);
     this.editBug = this.editBug.bind(this);
+    this.moveBug = this.moveBug.bind(this);
   }
   handleChange(event) {
     const { name } = event.target;
@@ -134,7 +137,29 @@ class BugsList extends Component {
         console.log(res.data);
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
-          this.setState({ users: res.data.body });
+          console.log("users list");
+          var loginid = localStorage.getItem("id");
+          var data = res.data.body;
+          // var u_list = [];
+          // u_data.map((ll) => {
+          //   if (ll.user_id !== parseInt(loginid)) {
+          //     u_list.push(ll);
+          //   }
+          // });
+
+          // console.log(u_list);
+          // console.log("users list");
+          // this.setState({ users: u_list });
+          let filterList = data.filter((ll) => {
+            if (ll.user_id !== parseInt(loginid)) {
+                return true;
+
+            }
+            return false;
+        })
+        console.log(filterList);
+          console.log("users list");
+          this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -171,6 +196,7 @@ class BugsList extends Component {
           console.log(data);
           console.log(res.data.body);
           window.alert(res.data.body);
+          this.getListOfBugs();
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
           window.alert(res.data.body);
@@ -246,13 +272,49 @@ class BugsList extends Component {
     this.getListOfBugs();
     this.getUsersList();
   }
+
+ 
+  moveBug() {
+    const port = localStorage.getItem("port");
+    const data = {
+      sprint_id: this.state.move_sprint_id,
+      bug_id: this.state.move_bug_id,
+    };
+    console.log(data)
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(port + "/bugmovetosprint", data, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.statuscode === 200) {
+          console.log(data);
+          console.log(res.data.body);
+          window.alert(res.data.body);
+          this.getListOfBugs();
+        } else if (res.data.statuscode === 400) {
+          console.log(res.data.body);
+          window.alert(res.data.body);
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    this.setState({
+     move_sprint_id:"",
+     move_story_id:""
+    });
+  }
   render() {
-    return (
+  return (
       <>
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <Navmenu />
+              <ManagerMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -283,7 +345,7 @@ class BugsList extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Admin</div>
+                        <div className="d-none d-xl-inline-block">Manager</div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -345,6 +407,7 @@ class BugsList extends Component {
                                     <th scope="col">Estimated Hours</th>
                                     <th scope="col">Completed Hours</th>
                                     <th scope="col">Edit</th>
+                                    <th scope="col">Move To Another Sprint</th>
                                   </tr>
                                 </thead>
 
@@ -396,6 +459,22 @@ class BugsList extends Component {
                                               Edit
                                             </button>
                                           </td>
+                                          <td>
+                                            <button
+                                              type="button"
+                                              className="btn btn-primary"
+                                              data-bs-toggle="modal"
+                                              data-bs-target="#MoveBug"
+                                              onClick={() => {
+                                                this.setState({
+                                                move_sprint_id:p.bug_sprint,
+                                                move_bug_id:p.bug_id
+                                                });
+                                              }}
+                                            >
+                                              Move
+                                            </button>
+                                          </td>
                                         </tr>
                                       ))}
                                   </tbody>
@@ -433,6 +512,7 @@ class BugsList extends Component {
                         aria-label="Close"
                       ></button>
                     </div>
+
                     <div className="modal-body">
                       <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -475,7 +555,7 @@ class BugsList extends Component {
                               value={this.state.bug_points}
                               onChange={this.handleChange}
                             >
-                              <option value={this.state.bug_points}  selected hidden>{this.state.bug_points}</option>
+                               <option value={this.state.bug_points} selected hidden>{this.state.bug_points}</option>
                               <option value="1">1</option>
                               <option value="2">2</option>
                               <option value="3">3</option>
@@ -555,6 +635,7 @@ class BugsList extends Component {
                               name="bug_completed_hours"
                               value={this.state.bug_completed_hours}
                               onChange={this.handleChange}
+                              required
                             />
                           </div>
                         </div>
@@ -590,12 +671,74 @@ class BugsList extends Component {
                   </div>
                 </div>
               </div>
+            
+              <div
+              className="modal fade"
+              id="MoveBug"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title fw-bold" id="exampleModalLabel">
+                      Move bug to another sprint
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="row">
+                   <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                          <label className="form-label">Select Sprint</label>
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            name="move_sprint_id"
+                            value={this.state.move_sprint_id}
+                            onChange={this.handleChange}
+                          >
+                            <option value="" hidden >Select Sprint</option>
+                            {this.state.users.length !== 0 && (
+                              <React.Fragment>
+                                {this.state.sprints.map((p, index) => (
+                                  <option key={index} value={p.sprint_id}>
+                                    {p.sprint_name}
+                                  </option>
+                                ))}
+                              </React.Fragment>
+                            )}
+                          </select>
+                        </div>
+                       
+                      </div>
+                  
+                      <div className="col-xl-12 col-lg-12 col-md-6 col-sm-12 text-end">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          data-bs-dismiss="modal"
+                          onClick={this.moveBug}
+                        >
+                           Move Bug
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+         
+         </div>
           </div>
         </div>
       </>
     );
   }
 }
-
-export default BugsList;
