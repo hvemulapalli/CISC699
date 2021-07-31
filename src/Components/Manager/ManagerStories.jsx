@@ -151,10 +151,18 @@ export default class ManagerStories extends Component {
       sprint_id: "",
       move_sprint_id: "",
       move_story_id: "",
+      search:"",
+      collapsableclass:"accordion-collapse collapse table table-bordered"
     };
     this.updateStory = this.updateStory.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.moveStory = this.moveStory.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+  handleSearch(event) {
+    const { name } = event.target;
+    this.setState({ ...this.state, [name]: event.target.value });
+    this.setState({collapsableclass:"accordion-collapse collapse show table table-bordered"})
   }
   handleChange(event) {
     const { name } = event.target;
@@ -394,6 +402,18 @@ export default class ManagerStories extends Component {
             </div>
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
+              <div className="d-flex d-flex justify-content-end m-1">
+                  <input
+                    className="border border-secondary text-primary p-1"
+                    placeholder="Search Story By Name"
+                    type="text"
+                    name="search"
+                    value={this.state.search}
+                    onChange={this.handleSearch}
+                  />
+                  
+                </div>
+              
                 <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Story List</h5>
                 </div>
@@ -416,7 +436,7 @@ export default class ManagerStories extends Component {
                           </h2>
                           <table
                             id={"new" + r.sprint_id}
-                            className="accordion-collapse collapse table table-bordered"
+                            className={this.state.collapsableclass}
                             aria-labelledby="headingOne"
                           >
                             <thead>
@@ -442,7 +462,8 @@ export default class ManagerStories extends Component {
                               <tbody>
                                 {this.state.stories
                                   .filter((e) => e.story_sprint === r.sprint_id)
-                                  .map((p, i) => (
+                                  .map((p, i) => (<React.Fragment>
+                                    {p.story_name.match(this.state.search)&&
                                     <tr key={i}>
                                       <td>{p.story_name}</td>
                                       <td>{p.story_description}</td>
@@ -501,7 +522,8 @@ export default class ManagerStories extends Component {
                                           Move
                                         </button>
                                       </td>
-                                    </tr>
+                                    </tr>}
+                                    </React.Fragment>
                                   ))}
                               </tbody>
                             )}

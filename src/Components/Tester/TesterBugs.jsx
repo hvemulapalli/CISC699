@@ -31,7 +31,7 @@ export default class TesterBugs extends Component {
         {
           bug_id: 3,
 
-          bug_name: "one",
+          bug_name: "new",
 
           bug_description: "sdfsdf",
 
@@ -118,9 +118,17 @@ export default class TesterBugs extends Component {
       bug_assignee: "",
       bug_completed_hours: "0",
       bug_estimated_hours: "",
+      search:"",
+      collapsableclass:"accordion-collapse collapse table table-bordered"
     };
     this.handleChange = this.handleChange.bind(this);
     this.editBug = this.editBug.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+  handleSearch(event) {
+    const { name } = event.target;
+    this.setState({ ...this.state, [name]: event.target.value });
+    this.setState({collapsableclass:"accordion-collapse collapse show table table-bordered"})
   }
   handleChange(event) {
     const { name } = event.target;
@@ -137,16 +145,6 @@ export default class TesterBugs extends Component {
           console.log("users list");
           var loginid = localStorage.getItem("id");
           var data = res.data.body;
-          // var u_list = [];
-          // u_data.map((ll) => {
-          //   if (ll.user_id !== parseInt(loginid)) {
-          //     u_list.push(ll);
-          //   }
-          // });
-
-          // console.log(u_list);
-          // console.log("users list");
-          // this.setState({ users: u_list });
           let filterList = data.filter((ll) => {
             if (ll.user_id !== parseInt(loginid)) {
                 return true;
@@ -329,6 +327,17 @@ export default class TesterBugs extends Component {
             </div>
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
+              <div className="d-flex d-flex justify-content-end m-1">
+                  <input
+                    className="border border-secondary text-primary p-1"
+                    placeholder="Search Bug By Name"
+                    type="text"
+                    name="search"
+                    value={this.state.search}
+                    onChange={this.handleSearch}
+                  />
+                  
+                </div>
                 <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Bugs List</h5>
                 </div>
@@ -353,7 +362,7 @@ export default class TesterBugs extends Component {
                               </h2>
                               <table
                                 id={"new" + r.sprint_id}
-                                className="accordion-collapse collapse table table-bordered"
+                                className={this.state.collapsableclass}
                                 aria-labelledby="headingOne"
                               >
                                 <thead>
@@ -380,7 +389,8 @@ export default class TesterBugs extends Component {
                                       .filter(
                                         (e) => e.bug_sprint === r.sprint_id
                                       )
-                                      .map((p, i) => (
+                                      .map((p, i) => (<React.Fragment>
+                                        {p.bug_name.match(this.state.search)&&
                                         <tr key={i}>
                                           <td>{p.bug_name}</td>
                                           <td>{p.bug_description}</td>
@@ -419,7 +429,8 @@ export default class TesterBugs extends Component {
                                               Edit
                                             </button>
                                           </td>
-                                        </tr>
+                                        </tr>}
+                                        </React.Fragment>
                                       ))}
                                   </tbody>
                                 )}

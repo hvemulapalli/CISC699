@@ -114,7 +114,36 @@ class DevsStories extends Component {
           story_estimated_hours: 2,
 
           story_sprint: 2,
+        },{
+          story_id: 4,
+
+          story_name: "siva kumar",
+
+          story_description: "sdfsdf",
+
+          story_priority: "high",
+
+          story_points: 1,
+
+          story_status: "active",
+
+          story_created_by: {
+            id: 1,
+            name: "k",
+          },
+
+          story_assignee: {
+            id: 2,
+            name: "kumar",
+          },
+
+          story_completed_hours: 1,
+
+          story_estimated_hours: 2,
+
+          story_sprint: 1,
         },
+
       ],
       users: [
         {
@@ -149,14 +178,22 @@ class DevsStories extends Component {
       story_estimated_hours: "",
       story_id: "",
       sprint_id: "",
+      search:"",
+      collapsableclass:"accordion-collapse collapse table table-bordered"
     };
     this.updateStory = this.updateStory.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }handleSearch(event) {
+    const { name } = event.target;
+    this.setState({ ...this.state, [name]: event.target.value });
+    this.setState({collapsableclass:"accordion-collapse collapse show table table-bordered"})
   }
   handleChange(event) {
     const { name } = event.target;
     this.setState({ ...this.state, [name]: event.target.value });
   }
+  
   getUsersList() {
     const port = localStorage.getItem("port");
     axios
@@ -168,24 +205,14 @@ class DevsStories extends Component {
           console.log("users list");
           var loginid = localStorage.getItem("id");
           var data = res.data.body;
-          // var u_list = [];
-          // u_data.map((ll) => {
-          //   if (ll.user_id !== parseInt(loginid)) {
-          //     u_list.push(ll);
-          //   }
-          // });
-
-          // console.log(u_list);
-          // console.log("users list");
-          // this.setState({ users: u_list });
+          
           let filterList = data.filter((ll) => {
             if (ll.user_id !== parseInt(loginid)) {
-                return true;
-
+              return true;
             }
             return false;
-        })
-        console.log(filterList);
+          });
+          console.log(filterList);
           console.log("users list");
           this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
@@ -364,8 +391,20 @@ class DevsStories extends Component {
             </div>
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
-                <div className="card-header bg-white">
+                <div className="d-flex d-flex justify-content-end m-1">
+                  <input
+                    className="border border-secondary text-primary p-1"
+                    placeholder="Search Story By Name"
+                    type="text"
+                    name="search"
+                    value={this.state.search}
+                    onChange={this.handleSearch}
+                  />
+                  
+                </div>
+               <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Story List</h5>
+                  
                 </div>
                 {this.state.sprints.length !== 0 && (
                   <div>
@@ -374,7 +413,7 @@ class DevsStories extends Component {
                         <div className="accordion-item" key={index}>
                           <h2 className="accordion-header" id="headingOne">
                             <button
-                              className="accordion-button fw-bold"
+                              className="accordion-button fw-bold collapsed"
                               type="button"
                               data-bs-toggle="collapse"
                               data-bs-target={"#new" + r.sprint_id}
@@ -386,8 +425,9 @@ class DevsStories extends Component {
                           </h2>
                           <table
                             id={"new" + r.sprint_id}
-                            className="accordion-collapse collapse table table-bordered"
+                            className={this.state.collapsableclass}
                             aria-labelledby="headingOne"
+                            
                           >
                             <thead>
                               <tr>
@@ -411,8 +451,8 @@ class DevsStories extends Component {
                               <tbody>
                                 {this.state.stories
                                   .filter((e) => e.story_sprint === r.sprint_id)
-                                  .map((p, i) => (
-                                    <tr key={i}>
+                                  .map((p, i) => (<React.Fragment>
+                                    {p.story_name.match(this.state.search)&& <tr key={i}>
                                       <td>{p.story_name}</td>
                                       <td>{p.story_description}</td>
                                       <td>{p.story_priority}</td>
@@ -455,6 +495,8 @@ class DevsStories extends Component {
                                         </button>
                                       </td>
                                     </tr>
+                                   }
+                                </React.Fragment>
                                   ))}
                               </tbody>
                             )}
@@ -528,7 +570,9 @@ class DevsStories extends Component {
                             value={this.state.story_points}
                             onChange={this.handleChange}
                           >
-                             <option value={this.state.story_points} selected>{this.state.story_points}</option>
+                            <option value={this.state.story_points} selected>
+                              {this.state.story_points}
+                            </option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -545,7 +589,10 @@ class DevsStories extends Component {
                             value={this.state.story_status}
                             onChange={this.handleChange}
                           >
-                            <option  value={this.state.story_status} selected> {this.state.story_status}</option>
+                            <option value={this.state.story_status} selected>
+                              {" "}
+                              {this.state.story_status}
+                            </option>
                             <option value="done">Done</option>
                             <option value="to be verified">
                               To be verified

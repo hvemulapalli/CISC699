@@ -149,9 +149,16 @@ class TesterStories extends Component {
       story_estimated_hours: "",
       story_id: "",
       sprint_id: "",
+      search:"",
+      collapsableclass:"accordion-collapse collapse table table-bordered"
     };
     this.updateStory = this.updateStory.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }handleSearch(event) {
+    const { name } = event.target;
+    this.setState({ ...this.state, [name]: event.target.value });
+    this.setState({collapsableclass:"accordion-collapse collapse show table table-bordered"})
   }
   handleChange(event) {
     const { name } = event.target;
@@ -168,15 +175,6 @@ class TesterStories extends Component {
           console.log("users list");
           var loginid = localStorage.getItem("id");
           const data = res.data.body;
-          // var u_list = [];
-          // u_data.map((ll) => {
-          //   if (ll.user_id !== parseInt(loginid)) {
-          //     u_list.push(ll);
-          //   }
-          // });
-           // console.log(u_list);
-          // console.log("users list");
-          // this.setState({ users: u_list });
           let filterList = data.filter((ll) => {
             if (ll.user_id !== parseInt(loginid)) {
                 return true;
@@ -357,6 +355,18 @@ class TesterStories extends Component {
             </div>
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
+              <div className="d-flex d-flex justify-content-end m-1">
+                  <input
+                    className="border border-secondary text-primary p-1"
+                    placeholder="Search Story By Name"
+                    type="text"
+                    name="search"
+                    value={this.state.search}
+                    onChange={this.handleSearch}
+                  />
+                  
+                </div>
+              
                 <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Story List</h5>
                 </div>
@@ -379,7 +389,7 @@ class TesterStories extends Component {
                           </h2>
                           <table
                             id={"new" + r.sprint_id}
-                            className="accordion-collapse collapse table table-bordered"
+                            className={this.state.collapsableclass}
                             aria-labelledby="headingOne"
                           >
                             <thead>
@@ -404,7 +414,8 @@ class TesterStories extends Component {
                               <tbody>
                                 {this.state.stories
                                   .filter((e) => e.story_sprint === r.sprint_id)
-                                  .map((p, i) => (
+                                  .map((p, i) => (<React.Fragment>
+                                    {p.story_name.match(this.state.search)&&
                                     <tr key={i}>
                                       <td>{p.story_name}</td>
                                       <td>{p.story_description}</td>
@@ -447,7 +458,8 @@ class TesterStories extends Component {
                                           Edit
                                         </button>
                                       </td>
-                                    </tr>
+                                    </tr>}
+                                    </React.Fragment>
                                   ))}
                               </tbody>
                             )}
