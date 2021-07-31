@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import TesterMenu from "../NavMenu/TesterMenu";
+import ManagerMenu from "../NavMenu/ManagerMenu";
 import axios from "axios";
-class TesterStories extends Component {
+export default class ManagerStories extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -149,13 +149,17 @@ class TesterStories extends Component {
       story_estimated_hours: "",
       story_id: "",
       sprint_id: "",
+      move_sprint_id: "",
+      move_story_id: "",
       search:"",
       collapsableclass:"accordion-collapse collapse table table-bordered"
     };
     this.updateStory = this.updateStory.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.moveStory = this.moveStory.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-  }handleSearch(event) {
+  }
+  handleSearch(event) {
     const { name } = event.target;
     this.setState({ ...this.state, [name]: event.target.value });
     this.setState({collapsableclass:"accordion-collapse collapse show table table-bordered"})
@@ -175,14 +179,23 @@ class TesterStories extends Component {
           console.log("users list");
           var loginid = localStorage.getItem("id");
           const data = res.data.body;
+          // var u_list = [];
+          // u_data.map((ll) => {
+          //   if (ll.user_id !== parseInt(loginid)) {
+          //     u_list.push(ll);
+          //   }
+          // });
+
+          // console.log(u_list);
+          // console.log("users list");
+          // this.setState({ users: u_list });
           let filterList = data.filter((ll) => {
             if (ll.user_id !== parseInt(loginid)) {
-                return true;
-
+              return true;
             }
             return false;
-        })
-        console.log(filterList);
+          });
+          console.log(filterList);
           console.log("users list");
           this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
@@ -289,6 +302,40 @@ class TesterStories extends Component {
       story_estimated_hours: "",
     });
   }
+  moveStory() {
+    const port = localStorage.getItem("port");
+    const data = {
+      sprint_id: this.state.move_sprint_id,
+      story_id: this.state.move_story_id,
+    };
+    console.log(data)
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(port + "/storymovetosprint", data, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.statuscode === 200) {
+          console.log(data);
+          console.log(res.data.body);
+          window.alert(res.data.body);
+          this.getListOfStories();
+        } else if (res.data.statuscode === 400) {
+          console.log(res.data.body);
+          window.alert(res.data.body);
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    this.setState({
+     move_sprint_id:"",
+     move_story_id:""
+    });
+  }
   componentDidMount() {
     this.getUsersList();
     this.getSprints();
@@ -301,7 +348,7 @@ class TesterStories extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <TesterMenu />
+              <ManagerMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -332,7 +379,7 @@ class TesterStories extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Tester</div>
+                        <div className="d-none d-xl-inline-block">Manager</div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -404,6 +451,7 @@ class TesterStories extends Component {
                                 <th scope="col">Estimated Hours</th>
                                 <th scope="col">Completed Hours</th>
                                 <th scope="col">Edit</th>
+                                <th scope="col">Move to Another Sprint</th>
                               </tr>
                             </thead>
 
@@ -456,6 +504,22 @@ class TesterStories extends Component {
                                           }}
                                         >
                                           Edit
+                                        </button>
+                                      </td>
+                                      <td>
+                                        <button
+                                          type="button"
+                                          className="btn btn-primary"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#movestory"
+                                          onClick={() => {
+                                            this.setState({
+                                              move_sprint_id: p.story_sprint,
+                                              move_story_id: p.story_id,
+                                            });
+                                          }}
+                                        >
+                                          Move
                                         </button>
                                       </td>
                                     </tr>}
@@ -642,11 +706,73 @@ class TesterStories extends Component {
                 </div>
               </div>
             </div>
+            <div
+              className="modal fade"
+              id="movestory"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title fw-bold" id="exampleModalLabel">
+                      Move story to another sprint
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="row">
+                      <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                        <div class="mb-3">
+                          <label className="form-label">Select Sprint</label>
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            name="move_sprint_id"
+                            value={this.state.move_sprint_id}
+                            onChange={this.handleChange}
+                          >
+                            <option value="" hidden>
+                              Select Sprint
+                            </option>
+                            {this.state.users.length !== 0 && (
+                              <React.Fragment>
+                                {this.state.sprints.map((p, index) => (
+                                  <option key={index} value={p.sprint_id}>
+                                    {p.sprint_name}
+                                  </option>
+                                ))}
+                              </React.Fragment>
+                            )}
+                          </select>
+                        </div>
+                       
+                      </div>
+
+                      <div className="col-xl-12 col-lg-12 col-md-6 col-sm-12 text-end">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          data-bs-dismiss="modal"
+                          onClick={this.moveStory}
+                        >
+                          Move Story
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </>
     );
   }
 }
-
-export default TesterStories;

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import TesterMenu from "../NavMenu/TesterMenu";
+import DevsMenu from "../NavMenu/DevsMenu";
 import axios from "axios";
-class TesterStories extends Component {
+class DevsStories extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -114,7 +114,36 @@ class TesterStories extends Component {
           story_estimated_hours: 2,
 
           story_sprint: 2,
+        },{
+          story_id: 4,
+
+          story_name: "siva kumar",
+
+          story_description: "sdfsdf",
+
+          story_priority: "high",
+
+          story_points: 1,
+
+          story_status: "active",
+
+          story_created_by: {
+            id: 1,
+            name: "k",
+          },
+
+          story_assignee: {
+            id: 2,
+            name: "kumar",
+          },
+
+          story_completed_hours: 1,
+
+          story_estimated_hours: 2,
+
+          story_sprint: 1,
         },
+
       ],
       users: [
         {
@@ -164,6 +193,7 @@ class TesterStories extends Component {
     const { name } = event.target;
     this.setState({ ...this.state, [name]: event.target.value });
   }
+  
   getUsersList() {
     const port = localStorage.getItem("port");
     axios
@@ -174,15 +204,15 @@ class TesterStories extends Component {
           console.log(res.data.body);
           console.log("users list");
           var loginid = localStorage.getItem("id");
-          const data = res.data.body;
+          var data = res.data.body;
+          
           let filterList = data.filter((ll) => {
             if (ll.user_id !== parseInt(loginid)) {
-                return true;
-
+              return true;
             }
             return false;
-        })
-        console.log(filterList);
+          });
+          console.log(filterList);
           console.log("users list");
           this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
@@ -225,8 +255,12 @@ class TesterStories extends Component {
   }
   getListOfStories() {
     const port = localStorage.getItem("port");
+    const data = { user_id: localStorage.getItem("id") };
+    const headers = {
+      "Content-Type": "application/json",
+    };
     axios
-      .get(port + "/getlistofstories")
+      .post(port + "/listuserstories", data, headers)
       .then((res) => {
         console.log(res.data);
         if (res.data.statuscode === 200) {
@@ -301,7 +335,7 @@ class TesterStories extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <TesterMenu />
+              <DevsMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -332,7 +366,9 @@ class TesterStories extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Tester</div>
+                        <div className="d-none d-xl-inline-block">
+                          Developer
+                        </div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -355,7 +391,7 @@ class TesterStories extends Component {
             </div>
             <div className="wrapper-content p-4 text-start">
               <div className="card border-0 shadow-sm">
-              <div className="d-flex d-flex justify-content-end m-1">
+                <div className="d-flex d-flex justify-content-end m-1">
                   <input
                     className="border border-secondary text-primary p-1"
                     placeholder="Search Story By Name"
@@ -366,9 +402,9 @@ class TesterStories extends Component {
                   />
                   
                 </div>
-              
-                <div className="card-header bg-white">
+               <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Story List</h5>
+                  
                 </div>
                 {this.state.sprints.length !== 0 && (
                   <div>
@@ -377,7 +413,7 @@ class TesterStories extends Component {
                         <div className="accordion-item" key={index}>
                           <h2 className="accordion-header" id="headingOne">
                             <button
-                              className="accordion-button fw-bold"
+                              className="accordion-button fw-bold collapsed"
                               type="button"
                               data-bs-toggle="collapse"
                               data-bs-target={"#new" + r.sprint_id}
@@ -391,6 +427,7 @@ class TesterStories extends Component {
                             id={"new" + r.sprint_id}
                             className={this.state.collapsableclass}
                             aria-labelledby="headingOne"
+                            
                           >
                             <thead>
                               <tr>
@@ -415,8 +452,7 @@ class TesterStories extends Component {
                                 {this.state.stories
                                   .filter((e) => e.story_sprint === r.sprint_id)
                                   .map((p, i) => (<React.Fragment>
-                                    {p.story_name.match(this.state.search)&&
-                                    <tr key={i}>
+                                    {p.story_name.match(this.state.search)&& <tr key={i}>
                                       <td>{p.story_name}</td>
                                       <td>{p.story_description}</td>
                                       <td>{p.story_priority}</td>
@@ -458,8 +494,9 @@ class TesterStories extends Component {
                                           Edit
                                         </button>
                                       </td>
-                                    </tr>}
-                                    </React.Fragment>
+                                    </tr>
+                                   }
+                                </React.Fragment>
                                   ))}
                               </tbody>
                             )}
@@ -533,7 +570,9 @@ class TesterStories extends Component {
                             value={this.state.story_points}
                             onChange={this.handleChange}
                           >
-                             <option value={this.state.story_points} selected>{this.state.story_points}</option>
+                            <option value={this.state.story_points} selected>
+                              {this.state.story_points}
+                            </option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -550,7 +589,10 @@ class TesterStories extends Component {
                             value={this.state.story_status}
                             onChange={this.handleChange}
                           >
-                            <option  value={this.state.story_status} selected> {this.state.story_status}</option>
+                            <option value={this.state.story_status} selected>
+                              {" "}
+                              {this.state.story_status}
+                            </option>
                             <option value="done">Done</option>
                             <option value="to be verified">
                               To be verified
@@ -649,4 +691,4 @@ class TesterStories extends Component {
   }
 }
 
-export default TesterStories;
+export default DevsStories;

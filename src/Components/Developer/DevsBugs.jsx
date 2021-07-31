@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import TesterMenu from "../NavMenu/TesterMenu";
 import axios from "axios";
-export default class TesterBugs extends Component {
+import DevsMenu from "../NavMenu/DevsMenu";
+export default class DevsBugs extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -31,7 +31,7 @@ export default class TesterBugs extends Component {
         {
           bug_id: 3,
 
-          bug_name: "new",
+          bug_name: "my bug",
 
           bug_description: "sdfsdf",
 
@@ -60,7 +60,7 @@ export default class TesterBugs extends Component {
         {
           bug_id: 3,
 
-          bug_name: "one",
+          bug_name: "common",
 
           bug_description: "sdfsdf",
 
@@ -134,6 +134,7 @@ export default class TesterBugs extends Component {
     const { name } = event.target;
     this.setState({ ...this.state, [name]: event.target.value });
   }
+ 
   getUsersList() {
     const port = localStorage.getItem("port");
     axios
@@ -245,8 +246,12 @@ export default class TesterBugs extends Component {
   }
   getListOfBugs() {
     const port = localStorage.getItem("port");
+    const data = { user_id: localStorage.getItem("id") };
+    const headers = {
+      "Content-Type": "application/json",
+    };
     axios
-      .get(port + "/listbugs")
+      .post(port + "/listuserbugs", data, headers)
       .then((res) => {
         console.log(res.data);
         if (res.data.statuscode === 200) {
@@ -273,7 +278,7 @@ export default class TesterBugs extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <TesterMenu />
+              <DevsMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -304,7 +309,9 @@ export default class TesterBugs extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Tester</div>
+                        <div className="d-none d-xl-inline-block">
+                          Developer{" "}
+                        </div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -338,6 +345,7 @@ export default class TesterBugs extends Component {
                   />
                   
                 </div>
+              
                 <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Bugs List</h5>
                 </div>
@@ -390,7 +398,7 @@ export default class TesterBugs extends Component {
                                         (e) => e.bug_sprint === r.sprint_id
                                       )
                                       .map((p, i) => (<React.Fragment>
-                                        {p.bug_name.match(this.state.search)&&
+                                         {p.bug_name.match(this.state.search)&&
                                         <tr key={i}>
                                           <td>{p.bug_name}</td>
                                           <td>{p.bug_description}</td>

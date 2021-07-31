@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../Components/Admin/style.css";
-import TesterMenu from '../NavMenu/TesterMenu';
+import ManagerMenu from "../NavMenu/ManagerMenu";
 import dateFormat from "dateformat";
 import axios from "axios";
-class TesterSprints extends Component {
+export default class ManagerSprints extends Component {
   constructor(props) {
     super(props);
     this.addActiveClass = this.addActiveClass.bind(this);
@@ -22,6 +22,8 @@ class TesterSprints extends Component {
           role: "user",
         },
       ],
+      summary_sprint_id: "",
+      status: "",
       admin_id: "",
       sprint_name: "",
       sprint_duration: "15",
@@ -57,11 +59,15 @@ class TesterSprints extends Component {
           sprint_admin: 1,
         },
       ],
+      stories: [],
+      bugs: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.addSprint = this.addSprint.bind(this);
     this.addStory = this.addStory.bind(this);
     this.addBug = this.addBug.bind(this);
+    this.getStoriesSummary=this.getStoriesSummary.bind(this);
+    this.getBugsSummary=this.getBugsSummary.bind(this);
     this.editSprint = this.editSprint.bind(this);
   }
   handleChange(event) {
@@ -96,7 +102,19 @@ class TesterSprints extends Component {
         console.log(res.data);
         if (res.data.statuscode === 200) {
           console.log(res.data.body);
-          this.setState({ users: res.data.body });
+          console.log("users list");
+          var loginid = localStorage.getItem("id");
+          var data = res.data.body;
+          let filterList = data.filter((ll) => {
+            if (ll.user_id !== parseInt(loginid)) {
+                return true;
+
+            }
+            return false;
+        })
+        console.log(filterList);
+          console.log("users list");
+          this.setState({ users: filterList });
         } else if (res.data.statuscode === 400) {
           console.log(res.data.body);
         } else {
@@ -125,8 +143,8 @@ class TesterSprints extends Component {
     const data = {
       sprint_name: this.state.sprint_name,
       sprint_duration: this.state.sprint_duration,
-      sprint_start_time: this.state.sprint_start_time.split('T')[0],
-      sprint_end_time: this.state.sprint_end_time.split('T')[0],
+      sprint_start_time: this.state.sprint_start_time.split("T")[0],
+      sprint_end_time: this.state.sprint_end_time.split("T")[0],
       sprint_admin: localStorage.getItem("id"),
     };
     const headers = {
@@ -151,13 +169,13 @@ class TesterSprints extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        sprint_name: "",
-        sprint_duration: "",
-        sprint_start_time: "",
-        sprint_end_time:"",
-        sprint_admin: localStorage.getItem("id"),
-      })
+    this.setState({
+      sprint_name: "",
+      sprint_duration: "",
+      sprint_start_time: "",
+      sprint_end_time: "",
+      sprint_admin: localStorage.getItem("id"),
+    });
   }
   addStory() {
     const port = localStorage.getItem("port");
@@ -194,18 +212,18 @@ class TesterSprints extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        story_name: "",
-        story_description: "",
-        story_priority:"",
-        story_points: "",
-        story_status:"",
-        story_created_by: localStorage.getItem("id"),
-        story_assignee: "",
-        story_completed_hours: "",
-        story_estimated_hours: "",
-        sprint_id: localStorage.getItem("sprint_id"),
-      })
+    this.setState({
+      story_name: "",
+      story_description: "",
+      story_priority: "",
+      story_points: "",
+      story_status: "",
+      story_created_by: localStorage.getItem("id"),
+      story_assignee: "",
+      story_completed_hours: "",
+      story_estimated_hours: "",
+      sprint_id: localStorage.getItem("sprint_id"),
+    });
   }
   addBug() {
     const port = localStorage.getItem("port");
@@ -242,18 +260,92 @@ class TesterSprints extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        bug_name: "",
-        bug_description: "",
-        bug_priority:"",
-        bug_points:"",
-        bug_status: "",
-        bug_created_by: localStorage.getItem("id"),
-        bug_assignee:"",
-        bug_completed_hours:"",
-        bug_estimated_hours:"",
-        sprint_id: localStorage.getItem("sprint_id"),
+    this.setState({
+      bug_name: "",
+      bug_description: "",
+      bug_priority: "",
+      bug_points: "",
+      bug_status: "",
+      bug_created_by: localStorage.getItem("id"),
+      bug_assignee: "",
+      bug_completed_hours: "",
+      bug_estimated_hours: "",
+      sprint_id: localStorage.getItem("sprint_id"),
+    });
+  }
+  getStoriesSummary() {
+    const port = localStorage.getItem("port");
+    const data = {
+      status: this.state.status,
+      sprint_id: this.state.summary_sprint_id,
+    };
+    console.log(data)
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(port + "/getfilterstories", data, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.statuscode === 200) {
+          console.log(data);
+          console.log(res.data.body);
+
+          this.setState({ stories: res.data.body });
+        } else if (res.data.statuscode === 400) {
+          console.log(res.data.body);
+          window.alert(res.data.body);
+        } else {
+          return false;
+        }
       })
+      .catch((error) => {
+        console.log(error);
+      });
+    this.setState({
+      status: "",
+      sprint_id: ""
+    });
+  }
+  getBugsSummary() {
+    const port = localStorage.getItem("port");
+    const data = {
+      status: this.state.status,
+      sprint_id: this.state.summary_sprint_id,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(port + "/getfilterbugs", data, headers)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.statuscode === 200) {
+          console.log(data);
+          console.log(res.data.body);
+          this.setState({bugs:res.data.body})
+        } else if (res.data.statuscode === 400) {
+          console.log(res.data.body);
+          window.alert(res.data.body);
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    this.setState({
+      bug_name: "",
+      bug_description: "",
+      bug_priority: "",
+      bug_points: "",
+      bug_status: "",
+      bug_created_by: localStorage.getItem("id"),
+      bug_assignee: "",
+      bug_completed_hours: "",
+      bug_estimated_hours: "",
+      sprint_id: localStorage.getItem("sprint_id"),
+    });
   }
   editSprint() {
     const port = localStorage.getItem("port");
@@ -261,8 +353,8 @@ class TesterSprints extends Component {
       sprint_id: this.state.sprint_id,
       sprint_name: this.state.sprint_name,
       sprint_duration: this.state.sprint_duration,
-      sprint_start_time: this.state.sprint_start_time.split('T')[0],
-      sprint_end_time: this.state.sprint_end_time.split('T')[0],
+      sprint_start_time: this.state.sprint_start_time.split("T")[0],
+      sprint_end_time: this.state.sprint_end_time.split("T")[0],
       admin_id: this.state.admin_id,
     };
     console.log(data);
@@ -288,14 +380,14 @@ class TesterSprints extends Component {
       .catch((error) => {
         console.log(error);
       });
-      this.setState({
-        sprint_id: "",
-        sprint_name: "",
-        sprint_duration: "",
-        sprint_start_time: "",
-        sprint_end_time: "",
-        admin_id: "",
-      })
+    this.setState({
+      sprint_id: "",
+      sprint_name: "",
+      sprint_duration: "",
+      sprint_start_time: "",
+      sprint_end_time: "",
+      admin_id: "",
+    });
   }
   render() {
     return (
@@ -303,7 +395,7 @@ class TesterSprints extends Component {
         <div className="dashboard-content">
           <div id="menu_nav" className={this.state.active && "active"}>
             <div id="side-menu" className={this.state.active && "active"}>
-              <TesterMenu />
+              <ManagerMenu />
             </div>
             <div
               id="menu-backdrop"
@@ -334,7 +426,7 @@ class TesterSprints extends Component {
                         aria-expanded="false"
                       >
                         <i className="far fa-user"></i>
-                        <div className="d-none d-xl-inline-block">Tester</div>
+                        <div className="d-none d-xl-inline-block">Manager</div>
                       </p>
                       <div
                         className="dropdown-menu dropdown-menu-end logout"
@@ -381,19 +473,34 @@ class TesterSprints extends Component {
                         <th scope="col">End Time</th>
                         <th scope="col">Create Story</th>
                         <th scope="col">Create Bug</th>
-                        {/* <th scope="col">Edit Sprint</th> */}
+                       
                       </tr>
                     </thead>
                     <tbody>
-                    {this.state.sprints.length ===0 && <p>No sprints found</p>}
+                      {this.state.sprints.length === 0 && (
+                        <p>No sprints found</p>
+                      )}
                       {this.state.sprints.length !== 0 && (
                         <React.Fragment>
                           {this.state.sprints.map((p, index) => (
                             <tr key={index}>
-                              <td>{p.sprint_name}</td>
+                              <td>
+                                <p
+                                  className="text-primary"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#summary"
+                                  onClick={() => {
+                                    this.setState({
+                                      summary_sprint_id: p.sprint_id,
+                                    });
+                                  }}
+                                >
+                                  {p.sprint_name}
+                                </p>
+                              </td>
                               <td>{p.sprint_duration}</td>
-                              <td>{p.sprint_start_time.split('T')[0]}</td>
-                              <td>{p.sprint_end_time.split('T')[0]}</td>
+                              <td>{p.sprint_start_time.split("T")[0]}</td>
+                              <td>{p.sprint_end_time.split("T")[0]}</td>
                               <td>
                                 {/* <!-- Button trigger modal --> */}
                                 <button
@@ -428,31 +535,6 @@ class TesterSprints extends Component {
                                   Bug
                                 </button>
                               </td>
-                              {/* <td>
-                                
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#editsprint"
-                                  onClick={() => {
-                                    localStorage.setItem(
-                                      "sprint_id",
-                                      p.sprint_id
-                                    );
-                                    this.setState({
-                                      sprint_id: p.sprint_id,
-                                      sprint_name: p.sprint_name,
-                                      sprint_duration: p.sprint_duration,
-                                      sprint_start_time: p.sprint_start_time.split('T')[0],
-                                      sprint_end_time: p.sprint_end_time.split('T')[0],
-                                      admin_id: localStorage.getItem("id"),
-                                    });
-                                  }}
-                                >
-                                  Edit
-                                </button>
-                              </td> */}
                             </tr>
                           ))}
                         </React.Fragment>
@@ -767,19 +849,7 @@ class TesterSprints extends Component {
                       />
                     </div>
                   </div>
-                  {/* <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-       <div className="mb-3">
-         <label className="form-label">Completed Hours</label>
-         <input
-           type="text"
-           className="form-control"
-           id="exampleFormControlInput3"
-           name="story_completed_hours"
-           value={this.state.story_completed_hours}
-           onChange={this.handleChange}
-         />
-       </div>
-     </div>*/}
+
                   <div className="col-12">
                     <div className="mb-3">
                       <label className="form-label">Story Description</label>
@@ -982,10 +1052,149 @@ class TesterSprints extends Component {
             </div>
           </div>
         </div>
-        {/* <!-- Create Bug Modal --> */}
+        {/* <!-- get summary--> */}
+        <div
+          className="modal fade"
+          id="summary"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" id="exampleModalLabel">
+                  Summary
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                    <div class="mb-3">
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        name="status"
+                        value={this.state.status}
+                        onChange={this.handleChange}
+                      >
+                        <option value="" hidden>
+                          Select Status
+                        </option>
+                        <option value="done">Done</option>
+                        <option value="to be verified">To be verified</option>
+                        <option value="in progress">In Progress</option>
+                        <option value="redo">Redo</option>
+                        <option value="todo">To do</option>
+                        <option value="hold">hold</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={this.getStoriesSummary}
+                    >
+                      Stories
+                    </button>
+                  </div>
+                  <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={this.getBugsSummary}
+                    >
+                      Bugs
+                    </button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12" >
+                    <h4>Stories</h4>
+                    <table
+                      className="table table-bordered"
+                     
+                    >
+                      <thead>
+                        <tr>
+                          <th scope="col">Story Name</th>
+                         <th scope="col">Points</th>
+                          <th scope="col">Status</th>
+                         <th scope="col">Estimated Hours</th>
+                          <th scope="col">Completed Hours</th>
+                        </tr>
+                      </thead>
+
+                      {this.state.stories.length === 0 && (
+                        <div>No stories found</div>
+                      )}
+                      {this.state.stories.length !== 0 && (
+                        <tbody>
+                          {this.state.stories.map((p, i) => (
+                            <tr key={i}>
+                              <td>{p.story_name}</td>
+                               <td>{p.story_points}</td>
+                              <td>{p.story_status}</td>
+                              <td>{p.story_estimated_hours}</td>
+                              <td>{p.story_completed_hours}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
+                </div>
+                <hr/>
+                <div className="row">
+                  <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12" >
+                    <h4>Bugs</h4>
+                    <table
+                      className="table table-bordered"
+                     
+                    >
+                      <thead>
+                        <tr>
+                          <th scope="col">Bug Name</th>
+                          <th scope="col">Points</th>
+                          <th scope="col">Status</th>
+                         <th scope="col">Estimated Hours</th>
+                          <th scope="col">Completed Hours</th>
+                        </tr>
+                      </thead>
+
+                      {this.state.bugs.length === 0 && (
+                        <div>No bugs found</div>
+                      )}
+                      {this.state.bugs.length !== 0 && (
+                        <tbody>
+                          {this.state.bugs.map((p, i) => (
+                            <tr key={i}>
+                              <td>{p.bug_name}</td>
+                             <td>{p.bug_points}</td>
+                              <td>{p.bug_status}</td>
+                             <td>{p.bug_estimated_hours}</td>
+                              <td>{p.bug_completed_hours}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   }
 }
-
-export default TesterSprints;
