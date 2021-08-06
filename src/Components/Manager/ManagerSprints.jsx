@@ -10,18 +10,7 @@ export default class ManagerSprints extends Component {
     this.addActiveClass = this.addActiveClass.bind(this);
     this.state = {
       active: false,
-      users: [
-        {
-          user_id: 1,
-          emp_id: 1,
-          user_name: "k",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-      ],
+      users: [],
       summary_sprint_id: "",
       status: "",
       admin_id: "",
@@ -49,16 +38,7 @@ export default class ManagerSprints extends Component {
       bug_assignee: "",
       bug_completed_hours: "0",
       bug_estimated_hours: "",
-      sprints: [
-        {
-          sprint_id: 1,
-          sprint_name: "sprint 1",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05",
-          sprint_end_time: "2021-06-20",
-          sprint_admin: 1,
-        },
-      ],
+      sprints: [],
       stories: [],
       bugs: [],
     };

@@ -17,27 +17,7 @@ class UsersList extends Component {
       user_password: "",
       user_phone_number: "",
       role_type: "",
-      users: [
-        {
-          user_id: 1,
-          emp_id: 1,
-          user_name: "k",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-        {
-          user_id: 2,
-          emp_id: 2,
-          user_name: "k2",
-          user_email: "k2@gmail.com",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-        },
-      ],
+      users: [],
     };
     this.addActiveClass = this.addActiveClass.bind(this);
     this.handleChange = this.handleChange.bind(this);

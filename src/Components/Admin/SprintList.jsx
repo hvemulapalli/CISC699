@@ -17,16 +17,7 @@ class SprintList extends Component {
       sprint_end_time: "",
       sprint_admin: localStorage.getItem("id"),
       sprint_id: localStorage.getItem("sprint_id"),
-    sprints: [
-        {
-          sprint_id: 1,
-          sprint_name: "sprint 1",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05",
-          sprint_end_time: "2021-06-20",
-          sprint_admin: 1,
-        },
-      ],
+    sprints: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.addSprint = this.addSprint.bind(this);

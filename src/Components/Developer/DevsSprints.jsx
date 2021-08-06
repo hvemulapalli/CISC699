@@ -9,16 +9,7 @@ class DevsSprints extends Component {
     this.addActiveClass = this.addActiveClass.bind(this);
     this.state = {
       active: false,
-      sprints: [
-        {
-          sprint_id: 1,
-          sprint_name: "sprint 1",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05",
-          sprint_end_time: "2021-06-20",
-          sprint_admin: 1,
-        },
-      ],
+      sprints: [],
     };
    
   }
