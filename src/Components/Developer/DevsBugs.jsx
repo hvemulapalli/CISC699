@@ -9,105 +9,9 @@ export default class DevsBugs extends Component {
     this.addActiveClass = this.addActiveClass.bind(this);
     this.state = {
       active: false,
-      sprints: [
-        {
-          sprint_id: 1,
-          sprint_name: "sprint 1",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05T",
-          sprint_end_time: "2021-06-20T18",
-          sprint_admin: 1,
-        },
-        {
-          sprint_id: 2,
-          sprint_name: "sprint 2",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05T",
-          sprint_end_time: "2021-06-20T18",
-          sprint_admin: 1,
-        },
-      ],
-      bugs: [
-        {
-          bug_id: 3,
-
-          bug_name: "my bug",
-
-          bug_description: "sdfsdf",
-
-          bug_priority: "high",
-
-          bug_points: 1,
-
-          bug_status: "active",
-
-          bug_created_by: {
-            id: 2,
-            name: "kumar",
-          },
-
-          bug_assignee: {
-            id: 1,
-            name: "k",
-          },
-
-          bug_completed_hours: 1,
-
-          bug_estimated_hours: 2,
-
-          bug_sprint: 1,
-        },
-        {
-          bug_id: 3,
-
-          bug_name: "common",
-
-          bug_description: "sdfsdf",
-
-          bug_priority: "high",
-
-          bug_points: 1,
-
-          bug_status: "active",
-          bug_created_by: {
-            id: 1,
-            name: "k",
-          },
-
-          bug_assignee: {
-            id: 2,
-            name: "kumar",
-          },
-
-          bug_completed_hours: 1,
-
-          bug_estimated_hours: 2,
-
-          bug_sprint: 2,
-        },
-      ],
-      users: [
-        {
-          user_id: 1,
-          emp_id: 1,
-          user_name: "k",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-        {
-          user_id: 2,
-          emp_id: 1,
-          user_name: "kumar",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-      ],
+      sprints: [],
+      bugs: [],
+      users: [],
       bug_id: "",
       bug_name: "",
       bug_description: "",
@@ -350,6 +254,7 @@ export default class DevsBugs extends Component {
                   <h5 className="mb-0 text-primary fw-bold">Bugs List</h5>
                 </div>
                 <div className="card-body">
+                {this.state.sprints.length === 0&&<div>Sprints and Bugs Not Available</div>}
                   <div>
                     {this.state.sprints.length !== 0 && (
                       <div>

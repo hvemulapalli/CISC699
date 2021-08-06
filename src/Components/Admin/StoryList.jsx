@@ -9,135 +9,9 @@ class StoryList extends Component {
     this.addActiveClass = this.addActiveClass.bind(this);
     this.state = {
       active: false,
-      sprints: [
-        {
-          sprint_id: 1,
-          sprint_name: "sprint 1",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05T",
-          sprint_end_time: "2021-06-20T18",
-          sprint_admin: 1,
-        },
-        {
-          sprint_id: 2,
-          sprint_name: "sprint 2",
-          sprint_duration: 15,
-          sprint_start_time: "2021-06-05T",
-          sprint_end_time: "2021-06-20T18",
-          sprint_admin: 1,
-        },
-      ],
-      stories: [
-        {
-          story_id: 1,
-
-          story_name: "one",
-
-          story_description: "sdfsdf",
-
-          story_priority: "high",
-
-          story_points: 1,
-
-          story_status: "active",
-
-          story_created_by: {
-            id: 2,
-            name: "kumar",
-          },
-
-          story_assignee: {
-            id: 1,
-            name: "k",
-          },
-
-          story_completed_hours: 1,
-
-          story_estimated_hours: 2,
-
-          story_sprint: 1,
-        },
-        {
-          story_id: 2,
-
-          story_name: "two",
-
-          story_description: "sdfsdf",
-
-          story_priority: "high",
-
-          story_points: 1,
-
-          story_status: "active",
-
-          story_created_by: {
-            id: 2,
-            name: "kumar",
-          },
-
-          story_assignee: {
-            id: 1,
-            name: "k",
-          },
-
-          story_completed_hours: 1,
-
-          story_estimated_hours: 2,
-
-          story_sprint: 2,
-        },
-        {
-          story_id: 3,
-
-          story_name: "test",
-
-          story_description: "sdfsdf",
-
-          story_priority: "high",
-
-          story_points: 1,
-
-          story_status: "active",
-
-          story_created_by: {
-            id: 1,
-            name: "k",
-          },
-
-          story_assignee: {
-            id: 2,
-            name: "kumar",
-          },
-
-          story_completed_hours: 1,
-
-          story_estimated_hours: 2,
-
-          story_sprint: 2,
-        },
-      ],
-      users: [
-        {
-          user_id: 1,
-          emp_id: 1,
-          user_name: "k",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-        {
-          user_id: 2,
-          emp_id: 1,
-          user_name: "kumar",
-          user_email: "sdfsdf",
-          user_password: "sdfsdf",
-          user_phone_number: 14565,
-          role_type: "developer",
-          role: "user",
-        },
-      ],
+      sprints: [],
+      stories: [],
+      users: [],
       story_name: "",
       story_description: "",
       story_priority: "",
@@ -358,6 +232,7 @@ class StoryList extends Component {
                 <div className="card-header bg-white">
                   <h5 className="mb-0 text-primary fw-bold">Story List</h5>
                 </div>
+                {this.state.sprints.length === 0&&<div>Sprints and Stories Not Available</div>}
                 {this.state.sprints.length !== 0 && (
                   <div>
                     {this.state.sprints.map((r, index) => (
